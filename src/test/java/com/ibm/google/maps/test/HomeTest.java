@@ -44,11 +44,13 @@ public class HomeTest {
     }
 
     @Test(description="captureGoogleMapScreens", dataProvider="NEWS")
-    public void captureGoogleMapScreens(String firstDirection, String secondDirection, String firstDimension, String secondDimension) {
+    public void captureGoogleMapScreens(String firstDirection, String secondDirection, String firstDimensionStart, String secondDimensionStart, String firstDimensionEnd, String secondDimensionEnd) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         logger.info("RUN test method: " + methodName);
-        int firstCount = Integer.valueOf(firstDimension);
-        int secondCount = Integer.valueOf(secondDimension);
+        int firstCountStart = Integer.valueOf(firstDimensionStart);
+        int secondCountStart = Integer.valueOf(secondDimensionStart);
+        int firstCountEnd = Integer.valueOf(firstDimensionEnd);
+        int secondCountEnd = Integer.valueOf(secondDimensionEnd);
         String userHome = System.getProperty("user.dir");
 		String resultFolder = userHome + "\\googlemaps\\"+ dateTimeStatic;
 		File dir = new File(resultFolder);
@@ -57,25 +59,26 @@ public class HomeTest {
 		}
         if(homePage.isSearchPanelCollapsed())
         	homePage.expandSearchPanel();
-        for(int firstDirectionDegrees=0;firstDirectionDegrees<firstCount;firstDirectionDegrees++) {
-        	String folderName = resultFolder+"\\"+firstDirection+" "+firstDirectionDegrees+"\u00B0\\";
+        for(;firstCountStart<=firstCountEnd;firstCountStart++) {
+        	String folderName = resultFolder+"\\"+firstDirection+" "+firstCountStart+"\u00B0\\";
 	        File dir2 = new File(folderName);
 			if (!dir2.exists()) {
 				dir2.mkdirs();
 			}
-        	for(int secondDirectionDegrees=0;secondDirectionDegrees<secondCount;secondDirectionDegrees++) {
-        		homePage.enterSearchText(firstDirection+" "+firstDirectionDegrees+"\u00B0 "+secondDirection+" "+secondDirectionDegrees+"\u00B0");
+        	for(;secondCountStart<secondCountEnd;secondCountStart++) {
+        		homePage.enterSearchText(firstDirection+" "+firstCountStart+"\u00B0 "+secondDirection+" "+secondCountStart+"\u00B0");
 		        homePage.clickSearchButton();
 				for(int zoomClicks=1;zoomClicks<=15;zoomClicks++) {
 					homePage.zoomOut();
+					try {
+						String filename = folderName+homePage.getHeaderTitle().replace("\"", "")+"_zoomout_"+zoomClicks+".png";
+						File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+						FileUtils.copyFile(screenshot, new File(filename));
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
-				try {
-					String filename = folderName+homePage.getHeaderTitle().replace("\"", "")+".png";
-					File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-					FileUtils.copyFile(screenshot, new File(filename));
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				
         	}
         }
 			        
@@ -90,10 +93,7 @@ public class HomeTest {
     @DataProvider(name="NEWS")
     public String[][] combinationOfDirections(){
     	return new String[][] {
-    		{"N","E","180","180"},
-    		{"N","W","180","180"},
-    		{"S","E","180","180"},
-    		{"S","W","180","180"},
+    		{"N","E","8","68","38","98"},
     	};
     }
 
