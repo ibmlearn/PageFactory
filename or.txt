@@ -1,0 +1,32 @@
+//div[contains(@class,'widget-pane-visible')]
+If collapsed, class should have widget-pane-collapsed and widget-pane-offscreen
+//div[contains(@class,'widget-pane-content-holder') and @jstcache]
+
+search box
+//input[@id='searchboxinput']
+
+search button
+//button[@id='searchbox-searchbutton']
+
+header title text
+//h1[contains(@class,'section-hero-header-title')]
+
+Satellite clip for mouse hover and click
+//div[contains(@class,'widget-minimap-clip')]
+
+Zoom in button
+//button[@id='widget-zoom-in']
+
+zoom out button
+//button[@id='widget-zoom-out']
+
+
+ @DataProvider(name="NEWS")
+    public String[][] combinationOfDirections(){
+    	return new String[][] {
+    		{"N","E","8","68","38","98"},
+    		{"N","W","180","180"},
+    		{"S","E","180","180"},
+    		{"S","W","180","180"},
+    	};
+    }
